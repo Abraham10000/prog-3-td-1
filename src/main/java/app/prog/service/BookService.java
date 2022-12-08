@@ -47,7 +47,7 @@ public class BookService {
 
         T is the type of the value, for example : here the class type is Book
          */
-        Optional<Book> optional = repository.findById(String.valueOf(bookId));
+        Optional<Book> optional = repository.findById(bookId);
         if (optional.isPresent()) {
             repository.delete(optional.get());
             return optional.get();
@@ -62,5 +62,9 @@ public class BookService {
          */
             throw new RuntimeException("Book." + bookId + " not found");
         }
+    }
+
+    public Book getBookById(int id) {
+        return repository.getById(id);
     }
 }

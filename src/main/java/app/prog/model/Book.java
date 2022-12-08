@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.time.LocalDate;
 
 @Entity
@@ -17,9 +18,11 @@ import java.time.LocalDate;
 public class Book {
     /*
     TODO-4-a: Note that i use serial type for ID in database. What does serial do ?
+
     TODO-4-b: Should I map it with int ? Fix it if there is a problem
      */
     @Id
+    @Serial
     private int id;
     private String title;
     private String author;
