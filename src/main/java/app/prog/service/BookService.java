@@ -3,10 +3,13 @@ package app.prog.service;
 import app.prog.model.BookEntity;
 import app.prog.repository.BookRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.StringTokenizer;
 
 @Service
 @AllArgsConstructor
@@ -21,34 +24,27 @@ public class BookService {
         return repository.saveAll(toCreate);
     }
 
+    public BookEntity findById(int id){
+        Optional<BookEntity> optional = repository.findById(String.valueOf(id));
+        if (optional.isPresent()) {
+            return optional.get();
+        } else{
+           throw new NullPointerException("User not found");
+        }
+    }
+
     public List<BookEntity> updateBooks(List<BookEntity> toUpdate) {
         return repository.saveAll(toUpdate);
     }
 
     //TODO-3: should I use Integer here or int ? Why ?
-    public BookEntity deleteBook(int BookEntityId) {
-        /*
-        TIPS: From the API, the Class Optional<T> is :
-        A container object which may or may not contain a non-null value.
-        If a value is present, isPresent() returns true.
-        If no value is present, the object is considered empty and isPresent() returns false.
-
-        T is the type of the value, for example : here the class type is BookEntity
-         */
+    public ResponseEntity<String> deleteBook(int BookEntityId) {
         Optional<BookEntity> optional = repository.findById(String.valueOf(BookEntityId));
         if (optional.isPresent()) {
             repository.delete(optional.get());
-            return optional.get();
-        } else {
-        /*
-        TODO-5 : The exception appears as an internal server error, status 500.
-        We all know that the appropriate error status is the 404 Not Found.
-        Any solution to do this ?
-        These links may help you :
-        Link 1 : https://www.baeldung.com/spring-response-entity
-        Link 2 : https://www.baeldung.com/exception-handling-for-rest-with-spring
-         */
-            throw new RuntimeException("BookEntity." + BookEntityId + " not found");
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else{
+            return new ResponseEntity<>("BookEntity"+ BookEntityId + "not found", HttpStatus.NOT_FOUND);
         }
     }
 }
